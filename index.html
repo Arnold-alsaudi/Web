@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>آيرون بلس | Iron Pulse Gym</title>
-  <meta name="description" content="آيرون بلس - نادي رياضي متكامل: تدريب قوة، كارديو، كروس فيت، يوغا، ملاكمة ومدربين معتمدين.">
-  <meta name="theme-color" content="#0b0b0d">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23c6ff00'/%3E%3Cpath d='M9 10v12M23 10v12M6 13v6M26 13v6M9 16h14' stroke='%230b0b0d' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+  <title>آيرون بلس | نادي رياضي</title>
+  <meta name="description" content="آيرون بلس - نادي رياضي بمدربين معتمدين وبرامج قوة وكروس فيت وملاكمة ويوغا، مفتوح ٢٤ ساعة.">
+  <meta name="theme-color" content="#efece6">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='16' fill='%23141414'/%3E%3Ccircle cx='16' cy='16' r='5' fill='%23e4572e'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cairo:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;500;600;700;800&family=Amiri:ital,wght@0,400;0,700;1,400&family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -17,216 +17,218 @@
   <!-- ===== Navbar ===== -->
   <header class="nav" id="nav">
     <div class="container nav__inner">
-      <a href="#home" class="logo" aria-label="Iron Pulse">
-        <span class="logo__mark">
-          <svg viewBox="0 0 24 24"><path d="M6 6v12M18 6v12M3 9v6M21 9v6M6 12h12"/></svg>
-        </span>
-        <span class="logo__text">IRON<b>PULSE</b></span>
-      </a>
+      <a href="#top" class="wordmark" aria-label="Iron Pulse">IRON<i></i>PULSE</a>
 
       <nav class="nav__links" id="navLinks">
-        <a href="#home" data-i18n="nav.home">الرئيسية</a>
         <a href="#programs" data-i18n="nav.programs">البرامج</a>
         <a href="#schedule" data-i18n="nav.schedule">الجدول</a>
-        <a href="#trainers" data-i18n="nav.trainers">المدربين</a>
-        <a href="#pricing" data-i18n="nav.pricing">الاشتراكات</a>
-        <a href="#contact" data-i18n="nav.contact">تواصل معنا</a>
+        <a href="#trainers" data-i18n="nav.trainers">الفريق</a>
+        <a href="#pricing" data-i18n="nav.pricing">العضوية</a>
+        <a href="#contact" data-i18n="nav.contact">تواصل</a>
       </nav>
 
       <div class="nav__actions">
         <button class="lang-btn" id="langBtn" type="button" aria-label="Switch language">EN</button>
-        <a href="#contact" class="btn btn--primary btn--sm nav__cta" data-i18n="nav.join">انضم الآن</a>
-        <button class="burger" id="burger" type="button" aria-label="Menu" aria-expanded="false">
-          <span></span><span></span><span></span>
-        </button>
+        <a href="#contact" class="btn btn--ink btn--sm nav__cta"><span data-i18n="nav.join">انضم إلينا</span></a>
+        <button class="burger" id="burger" type="button" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
       </div>
     </div>
   </header>
 
-  <main>
+  <main id="top">
     <!-- ===== Hero ===== -->
-    <section class="hero" id="home">
-      <div class="hero__bg"></div>
-      <div class="container hero__content">
-        <span class="eyebrow reveal" data-i18n="hero.eyebrow">الحصة الأولى مجاناً 🔥</span>
-        <h1 class="hero__title reveal">
-          <span data-i18n="hero.title1">ابنِ جسمك.</span><br>
-          <span class="accent" data-i18n="hero.title2">تحدَّ حدودك.</span>
-        </h1>
-        <p class="hero__sub reveal" data-i18n="hero.sub">أجهزة حديثة، ومدربون معتمدون، وبرامج مصمّمة لهدفك: خسارة الوزن أو بناء العضلات أو اللياقة العامة. مفتوح ٢٤ ساعة، ٧ أيام في الأسبوع.</p>
-        <div class="hero__ctas reveal">
-          <a href="#contact" class="btn btn--primary" data-i18n="hero.cta1">احجز حصتك المجانية</a>
-          <a href="#programs" class="btn btn--ghost" data-i18n="hero.cta2">استكشف البرامج</a>
+    <section class="hero">
+      <div class="container">
+        <div class="hero__meta">
+          <span data-i18n="hero.meta1">تأسس ٢٠١٦ — القاهرة</span>
+          <span data-i18n="hero.meta2">مفتوح ٢٤ ساعة، ٧ أيام</span>
         </div>
 
-        <div class="stats reveal">
-          <div class="stat"><strong data-count="2500" data-suffix="+">0</strong><span data-i18n="stats.members">عضو نشط</span></div>
-          <div class="stat"><strong data-count="18">0</strong><span data-i18n="stats.trainers">مدرب معتمد</span></div>
-          <div class="stat"><strong data-count="45" data-suffix="+">0</strong><span data-i18n="stats.classes">حصة أسبوعياً</span></div>
-          <div class="stat"><strong data-count="24" data-suffix="/7">0</strong><span data-i18n="stats.open">مواعيد العمل</span></div>
+        <h1 class="hero__title split-lines">
+          <span class="line"><span data-i18n="hero.l1">ابنِ نسخة</span></span>
+          <span class="line"><span><em class="serif" data-i18n="hero.l2a">أقوى</em> <span data-i18n="hero.l2b">منك.</span></span></span>
+        </h1>
+
+        <div class="hero__grid">
+          <div class="hero__side">
+            <p class="hero__sub fade" data-i18n="hero.sub">نادٍ رياضي بمدربين يعرفون اسمك، وبرامج مبنية على العلم، ومساحة تجعلك تريد العودة غداً.</p>
+            <div class="hero__ctas fade">
+              <a href="#contact" class="btn btn--ink"><span data-i18n="hero.cta1">احجز حصة مجانية</span><i class="btn__arrow"></i></a>
+              <a href="#programs" class="link-underline" data-i18n="hero.cta2">شاهد البرامج</a>
+            </div>
+            <div class="scroll-cue fade"><i></i><span data-i18n="hero.scroll">مرّر للأسفل</span></div>
+          </div>
+
+          <figure class="hero__media">
+            <div class="media-inner reveal-media" id="heroParallax">
+              <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1400&q=75" alt="" onerror="this.classList.add('img-failed')">
+            </div>
+            <div class="badge" aria-hidden="true">
+              <svg viewBox="0 0 120 120">
+                <defs><path id="circlePath" d="M60,60 m-46,0 a46,46 0 1,1 92,0 a46,46 0 1,1 -92,0"/></defs>
+                <text><textPath href="#circlePath" id="badgeText">الحصة الأولى مجاناً • الحصة الأولى مجاناً • </textPath></text>
+              </svg>
+              <i></i>
+            </div>
+          </figure>
         </div>
       </div>
     </section>
 
-    <!-- ===== Features ===== -->
-    <section class="section features" id="features">
+    <!-- ===== Marquee ===== -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee__track" id="marquee"></div>
+    </div>
+
+    <!-- ===== About ===== -->
+    <section class="section about" id="about">
       <div class="container">
-        <div class="section__head reveal">
-          <span class="eyebrow" data-i18n="features.eyebrow">لماذا آيرون بلس؟</span>
-          <h2 data-i18n="features.title">كل ما تحتاجه للوصول إلى هدفك</h2>
+        <span class="eyebrow" data-i18n="about.eyebrow">٠١ — عن النادي</span>
+        <p class="manifesto" id="manifesto" data-i18n="about.text">لسنا مجرد صالة أجهزة. نحن المكان الذي يتحول فيه الالتزام اليومي الصغير إلى نتائج كبيرة. لا وعود سريعة، ولا حلول سحرية. فقط خطة واضحة، وفريق يمشي معك خطوة بخطوة.</p>
+
+        <div class="stats">
+          <div class="stat fade"><strong data-count="2500" data-suffix="+">0</strong><span data-i18n="stats.members">عضو نشط</span></div>
+          <div class="stat fade"><strong data-count="18">0</strong><span data-i18n="stats.trainers">مدرب معتمد</span></div>
+          <div class="stat fade"><strong data-count="45">0</strong><span data-i18n="stats.classes">حصة كل أسبوع</span></div>
+          <div class="stat fade"><strong data-count="10" data-suffix="+">0</strong><span data-i18n="stats.years">سنوات من الخبرة</span></div>
         </div>
-        <div class="features__grid" id="featuresGrid"></div>
       </div>
     </section>
 
     <!-- ===== Programs ===== -->
     <section class="section programs" id="programs">
       <div class="container">
-        <div class="section__head reveal">
-          <span class="eyebrow" data-i18n="programs.eyebrow">برامجنا</span>
-          <h2 data-i18n="programs.title">اختر البرنامج المناسب لك</h2>
-          <p data-i18n="programs.sub">برامج لجميع المستويات، من المبتدئ إلى المحترف.</p>
+        <div class="head">
+          <span class="eyebrow" data-i18n="programs.eyebrow">٠٢ — البرامج</span>
+          <h2 class="split-lines"><span class="line"><span data-i18n="programs.title">ستة طرق لتصبح أقوى</span></span></h2>
         </div>
-        <div class="programs__grid" id="programsGrid"></div>
+        <ol class="prog-list" id="programsList"></ol>
       </div>
+      <div class="prog-preview" id="progPreview" aria-hidden="true"><img alt=""></div>
     </section>
 
     <!-- ===== Schedule ===== -->
     <section class="section schedule" id="schedule">
       <div class="container">
-        <div class="section__head reveal">
-          <span class="eyebrow" data-i18n="schedule.eyebrow">جدول الحصص</span>
-          <h2 data-i18n="schedule.title">الحصص الجماعية هذا الأسبوع</h2>
+        <div class="head head--row">
+          <div>
+            <span class="eyebrow" data-i18n="schedule.eyebrow">٠٣ — الجدول</span>
+            <h2 class="split-lines"><span class="line"><span data-i18n="schedule.title">حصص هذا الأسبوع</span></span></h2>
+          </div>
+          <div class="days" id="dayTabs" role="tablist"></div>
         </div>
-        <div class="tabs reveal" id="dayTabs" role="tablist"></div>
-        <div class="schedule__list reveal" id="scheduleList"></div>
+        <div class="sched-list" id="scheduleList"></div>
       </div>
     </section>
 
     <!-- ===== BMI ===== -->
     <section class="section bmi" id="bmi">
-      <div class="container bmi__inner">
-        <div class="bmi__text reveal">
-          <span class="eyebrow" data-i18n="bmi.eyebrow">أداة مجانية</span>
-          <h2 data-i18n="bmi.title">احسب مؤشر كتلة جسمك</h2>
-          <p data-i18n="bmi.sub">اعرف إن كان وزنك مناسباً لطولك، ودع مدربينا يضعون لك خطة بناءً على النتيجة.</p>
-          <ul class="bmi__legend">
-            <li><i class="dot dot--under"></i><span data-i18n="bmi.under">نحافة</span><em>&lt; 18.5</em></li>
-            <li><i class="dot dot--normal"></i><span data-i18n="bmi.normal">وزن مثالي</span><em>18.5 – 24.9</em></li>
-            <li><i class="dot dot--over"></i><span data-i18n="bmi.over">زيادة وزن</span><em>25 – 29.9</em></li>
-            <li><i class="dot dot--obese"></i><span data-i18n="bmi.obese">سمنة</span><em>≥ 30</em></li>
-          </ul>
+      <div class="container bmi__grid">
+        <div>
+          <span class="eyebrow" data-i18n="bmi.eyebrow">٠٤ — نقطة البداية</span>
+          <h2 class="split-lines"><span class="line"><span data-i18n="bmi.title">اعرف مؤشر كتلة جسمك</span></span></h2>
+          <p class="muted fade" data-i18n="bmi.sub">حرّك المؤشرين وشاهد النتيجة مباشرة. في أول زيارة يعطيك مدربونا تحليلاً دقيقاً لتكوين جسمك.</p>
+
+          <div class="range fade">
+            <div class="range__head"><label for="height" data-i18n="bmi.height">الطول</label><output id="heightOut">175</output></div>
+            <input type="range" id="height" min="140" max="210" value="175">
+          </div>
+          <div class="range fade">
+            <div class="range__head"><label for="weight" data-i18n="bmi.weight">الوزن</label><output id="weightOut">75</output></div>
+            <input type="range" id="weight" min="40" max="150" value="75">
+          </div>
         </div>
 
-        <form class="card bmi__form reveal" id="bmiForm" novalidate>
-          <div class="field">
-            <label for="height" data-i18n="bmi.height">الطول (سم)</label>
-            <input type="number" id="height" min="100" max="250" placeholder="175" required>
+        <div class="bmi__result fade" aria-live="polite">
+          <strong id="bmiValue">24.5</strong>
+          <span id="bmiLabel"></span>
+          <div class="bmi__scale">
+            <div class="bmi__track"><i id="bmiPointer"></i></div>
+            <div class="bmi__ticks" dir="ltr"><span>15</span><span>18.5</span><span>25</span><span>30</span><span>40</span></div>
           </div>
-          <div class="field">
-            <label for="weight" data-i18n="bmi.weight">الوزن (كجم)</label>
-            <input type="number" id="weight" min="30" max="300" placeholder="75" required>
-          </div>
-          <button type="submit" class="btn btn--primary btn--block" data-i18n="bmi.calc">احسب</button>
-          <div class="bmi__result" id="bmiResult" aria-live="polite" hidden>
-            <strong id="bmiValue">0</strong>
-            <span id="bmiLabel"></span>
-            <div class="bmi__bar"><i id="bmiPointer"></i></div>
-          </div>
-        </form>
+        </div>
       </div>
     </section>
 
     <!-- ===== Trainers ===== -->
     <section class="section trainers" id="trainers">
       <div class="container">
-        <div class="section__head reveal">
-          <span class="eyebrow" data-i18n="trainers.eyebrow">فريقنا</span>
-          <h2 data-i18n="trainers.title">مدربون سيوصلونك إلى هدفك</h2>
+        <div class="head">
+          <span class="eyebrow" data-i18n="trainers.eyebrow">٠٥ — الفريق</span>
+          <h2 class="split-lines"><span class="line"><span data-i18n="trainers.title">الناس الذين سيدفعونك للأمام</span></span></h2>
         </div>
-        <div class="trainers__grid" id="trainersGrid"></div>
+        <div class="team" id="trainersGrid"></div>
       </div>
     </section>
 
     <!-- ===== Pricing ===== -->
     <section class="section pricing" id="pricing">
       <div class="container">
-        <div class="section__head reveal">
-          <span class="eyebrow" data-i18n="pricing.eyebrow">الاشتراكات</span>
-          <h2 data-i18n="pricing.title">باقات تناسب الجميع</h2>
+        <div class="head head--row">
+          <div>
+            <span class="eyebrow" data-i18n="pricing.eyebrow">٠٦ — العضوية</span>
+            <h2 class="split-lines"><span class="line"><span data-i18n="pricing.title">اختر إيقاعك</span></span></h2>
+          </div>
+          <div class="billing" role="group">
+            <button type="button" class="billing__opt is-active" data-billing="monthly" data-i18n="pricing.monthly">شهري</button>
+            <button type="button" class="billing__opt" data-billing="yearly"><span data-i18n="pricing.yearly">سنوي</span> <em data-i18n="pricing.save">−٢٠٪</em></button>
+          </div>
         </div>
-
-        <div class="billing reveal">
-          <span data-i18n="pricing.monthly">شهري</span>
-          <button class="switch" id="billingSwitch" type="button" role="switch" aria-checked="false" aria-label="Billing period"><i></i></button>
-          <span data-i18n="pricing.yearly">سنوي</span>
-          <em class="badge" data-i18n="pricing.save">وفّر ٢٠٪</em>
-        </div>
-
-        <div class="pricing__grid" id="pricingGrid"></div>
+        <div class="plans" id="pricingGrid"></div>
       </div>
     </section>
 
     <!-- ===== Testimonials ===== -->
-    <section class="section testimonials" id="testimonials">
+    <section class="section quotes" id="testimonials">
       <div class="container">
-        <div class="section__head reveal">
-          <span class="eyebrow" data-i18n="testimonials.eyebrow">آراء الأعضاء</span>
-          <h2 data-i18n="testimonials.title">نتائج حقيقية لأشخاص حقيقيين</h2>
-        </div>
-        <div class="slider reveal">
-          <div class="slider__track" id="sliderTrack"></div>
-          <div class="slider__dots" id="sliderDots"></div>
+        <span class="eyebrow" data-i18n="testimonials.eyebrow">٠٧ — بكلماتهم</span>
+        <div class="quote" id="quote"></div>
+        <div class="quote__nav">
+          <span class="quote__count" id="quoteCount" dir="ltr">01 / 04</span>
+          <div>
+            <button type="button" class="circle-btn" id="prevQuote" aria-label="Previous"><i class="arrow arrow--back"></i></button>
+            <button type="button" class="circle-btn" id="nextQuote" aria-label="Next"><i class="arrow"></i></button>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- ===== Contact ===== -->
     <section class="section contact" id="contact">
-      <div class="container contact__inner">
-        <div class="contact__info reveal">
-          <span class="eyebrow" data-i18n="contact.eyebrow">ابدأ اليوم</span>
-          <h2 data-i18n="contact.title">احجز حصتك التجريبية المجانية</h2>
-          <p data-i18n="contact.sub">اترك بياناتك وسنتواصل معك خلال ساعة لتحديد موعد يناسبك.</p>
-
-          <ul class="info-list">
-            <li>
-              <svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
-              <span data-i18n="contact.address">١٢ شارع التسعين، التجمع الخامس، القاهرة</span>
-            </li>
-            <li>
-              <svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>
-              <a href="tel:+201000000000" dir="ltr">+20 100 000 0000</a>
-            </li>
-            <li>
-              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-              <span data-i18n="contact.hours">مفتوح ٢٤ ساعة طوال أيام الأسبوع</span>
-            </li>
+      <div class="container contact__grid">
+        <div>
+          <span class="eyebrow" data-i18n="contact.eyebrow">٠٨ — ابدأ الآن</span>
+          <h2 class="contact__title split-lines">
+            <span class="line"><span data-i18n="contact.title1">أصعب خطوة</span></span>
+            <span class="line"><span><em class="serif" data-i18n="contact.title2">هي الأولى.</em></span></span>
+          </h2>
+          <p class="contact__sub fade" data-i18n="contact.sub">لذلك جعلناها مجانية. اترك بياناتك وسنتصل بك خلال ساعة لتحديد موعد حصتك التجريبية.</p>
+          <ul class="contact__info fade">
+            <li data-i18n="contact.address">١٢ شارع التسعين، التجمع الخامس، القاهرة</li>
+            <li><a href="tel:+201000000000" dir="ltr">+20 100 000 0000</a></li>
+            <li data-i18n="contact.hours">مفتوح ٢٤ ساعة طوال الأسبوع</li>
           </ul>
         </div>
 
-        <form class="card contact__form reveal" id="contactForm" novalidate>
+        <form class="form fade" id="contactForm" novalidate>
           <div class="field">
-            <label for="name" data-i18n="form.name">الاسم بالكامل</label>
-            <input type="text" id="name" name="name" data-i18n-placeholder="form.namePh" placeholder="مثال: أحمد محمد" required>
+            <label for="name" data-i18n="form.name">الاسم</label>
+            <input type="text" id="name" name="name" data-i18n-placeholder="form.namePh" placeholder="اسمك بالكامل" autocomplete="name" required>
             <small class="error" data-i18n="form.nameErr">من فضلك اكتب اسمك</small>
           </div>
           <div class="field">
             <label for="phone" data-i18n="form.phone">رقم الجوال</label>
-            <input type="tel" id="phone" name="phone" placeholder="01xxxxxxxxx" dir="ltr" required>
+            <input type="tel" id="phone" name="phone" placeholder="01xxxxxxxxx" dir="ltr" autocomplete="tel" required>
             <small class="error" data-i18n="form.phoneErr">اكتب رقم جوال صحيح</small>
           </div>
-          <div class="field">
-            <label for="goal" data-i18n="form.goal">هدفك</label>
-            <select id="goal" name="goal">
-              <option value="loss" data-i18n="form.goal1">خسارة الوزن</option>
-              <option value="muscle" data-i18n="form.goal2">بناء العضلات</option>
-              <option value="fitness" data-i18n="form.goal3">لياقة عامة</option>
-              <option value="other" data-i18n="form.goal4">هدف آخر</option>
-            </select>
-          </div>
-          <button type="submit" class="btn btn--primary btn--block" data-i18n="form.submit">احجز الآن</button>
-          <p class="form__note" data-i18n="form.note">بياناتك في أمان ولن نشاركها مع أي جهة.</p>
+          <fieldset class="field goals">
+            <legend data-i18n="form.goal">هدفك</legend>
+            <label><input type="radio" name="goal" value="loss" checked><span data-i18n="form.goal1">خسارة الوزن</span></label>
+            <label><input type="radio" name="goal" value="muscle"><span data-i18n="form.goal2">بناء العضلات</span></label>
+            <label><input type="radio" name="goal" value="fitness"><span data-i18n="form.goal3">لياقة عامة</span></label>
+            <label><input type="radio" name="goal" value="other"><span data-i18n="form.goal4">هدف آخر</span></label>
+          </fieldset>
+          <button type="submit" class="btn btn--paper btn--block"><span data-i18n="form.submit">احجز حصتي المجانية</span><i class="btn__arrow"></i></button>
         </form>
       </div>
     </section>
@@ -234,33 +236,25 @@
 
   <!-- ===== Footer ===== -->
   <footer class="footer">
-    <div class="container footer__inner">
-      <div>
-        <a href="#home" class="logo">
-          <span class="logo__mark"><svg viewBox="0 0 24 24"><path d="M6 6v12M18 6v12M3 9v6M21 9v6M6 12h12"/></svg></span>
-          <span class="logo__text">IRON<b>PULSE</b></span>
-        </a>
-        <p class="footer__about" data-i18n="footer.about">نادٍ رياضي متكامل هدفه أن يساعدك لتصبح أقوى وأكثر صحة كل يوم.</p>
+    <div class="container">
+      <div class="footer__row">
+        <div class="socials">
+          <a href="#">Instagram</a><a href="#">Facebook</a><a href="#">TikTok</a><a href="#">YouTube</a>
+        </div>
+        <a href="#top" class="link-underline" data-i18n="footer.top">العودة للأعلى</a>
       </div>
-      <div class="socials">
-        <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8"/></svg></a>
-        <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M14 8h3V4h-3a4 4 0 0 0-4 4v2H7v4h3v7h4v-7h3l1-4h-4V8z"/></svg></a>
-        <a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24"><path d="M14 3v11.5a3.5 3.5 0 1 1-3.5-3.5M14 3c.5 3 2.5 5 5.5 5"/></svg></a>
-        <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24"><rect x="2.5" y="5.5" width="19" height="13" rx="4"/><path d="M10 9.5v5l4.5-2.5z"/></svg></a>
+      <div class="footer__mark" aria-hidden="true">IRON<i></i>PULSE</div>
+      <div class="footer__row footer__small">
+        <span>© <span id="year"></span> Iron Pulse. <span data-i18n="footer.rights">جميع الحقوق محفوظة.</span></span>
+        <span data-i18n="footer.demo">موقع تجريبي لأغراض العرض</span>
       </div>
-    </div>
-    <div class="container footer__bottom">
-      <span>© <span id="year"></span> Iron Pulse Gym. <span data-i18n="footer.rights">جميع الحقوق محفوظة.</span></span>
-      <span class="footer__demo" data-i18n="footer.demo">موقع تجريبي (Demo) لأغراض العرض فقط</span>
     </div>
   </footer>
 
-  <!-- WhatsApp -->
   <a class="whatsapp" href="https://wa.me/201000000000" target="_blank" rel="noopener" aria-label="WhatsApp">
     <svg viewBox="0 0 24 24"><path d="M4 20l1.3-4A8 8 0 1 1 8 18.7z"/><path d="M9 9c0 3 3 6 6 6l1-1.5-2-1-1 .8a4 4 0 0 1-2.3-2.3l.8-1-1-2z"/></svg>
   </a>
 
-  <!-- Toast -->
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script src="js/i18n.js"></script>

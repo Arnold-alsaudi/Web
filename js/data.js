@@ -7,32 +7,6 @@
 const img = (id, w = 800) =>
   `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=70`;
 
-const ICONS = {
-  dumbbell: '<path d="M6 6v12M18 6v12M3 9v6M21 9v6M6 12h12"/>',
-  clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
-  users: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M21.5 20c0-2.8-1.6-4.9-4-5.7"/>',
-  pulse: '<path d="M3 12h4l2-5 4 10 2-5h6"/>',
-  leaf: '<path d="M5 19c0-8 6-14 14-14 0 8-6 14-14 14z"/><path d="M5 19l8-8"/>',
-  shield: '<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>',
-  check: '<path d="M5 12l5 5 9-10"/>',
-  star: '<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/>'
-};
-
-const FEATURES = [
-  { icon: "dumbbell", title: { ar: "أجهزة حديثة", en: "Modern equipment" },
-    text: { ar: "أحدث أجهزة القوة والكارديو من أفضل الماركات العالمية.", en: "The latest strength and cardio machines from top global brands." } },
-  { icon: "users", title: { ar: "مدربون معتمدون", en: "Certified coaches" },
-    text: { ar: "فريق حاصل على شهادات دولية ويتابعك خطوة بخطوة.", en: "An internationally certified team that follows you step by step." } },
-  { icon: "leaf", title: { ar: "خطة تغذية", en: "Nutrition plans" },
-    text: { ar: "أخصائي تغذية يصمّم لك نظاماً غذائياً يناسب هدفك.", en: "A nutritionist designs a meal plan that matches your goal." } },
-  { icon: "clock", title: { ar: "مفتوح ٢٤/٧", en: "Open 24/7" },
-    text: { ar: "تمرّن في الوقت المناسب لك، ليلاً أو نهاراً.", en: "Train whenever it suits you, day or night." } },
-  { icon: "pulse", title: { ar: "متابعة التقدّم", en: "Progress tracking" },
-    text: { ar: "قياسات دورية لتحليل الجسم لتشاهد نتائجك بالأرقام.", en: "Regular body-composition scans so you see results in numbers." } },
-  { icon: "shield", title: { ar: "قسم خاص للسيدات", en: "Ladies-only area" },
-    text: { ar: "صالة ومدربات مخصّصة للسيدات بخصوصية تامة.", en: "A dedicated, fully private area with female coaches." } }
-];
-
 const PROGRAMS = [
   { image: img("photo-1581009146145-b5ef050c2e1e"), sessions: 4,
     title: { ar: "تدريب القوة", en: "Strength Training" },

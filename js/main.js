@@ -4,79 +4,66 @@
 (() => {
   const $ = (s, root = document) => root.querySelector(s);
   const $$ = (s, root = document) => [...root.querySelectorAll(s)];
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
-  const state = {
-    lang: "ar",
-    day: todayIndex(),
-    yearly: false,
-    slide: 0,
-    booked: new Set()
-  };
-
+  const state = { lang: "ar", day: todayIndex(), yearly: false, quote: 0, booked: new Set() };
   try { state.lang = localStorage.getItem("lang") || "ar"; } catch (e) {}
 
   const t = (key, vars = {}) =>
     (I18N[state.lang][key] || key).replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? "");
   const L = (obj) => obj[state.lang];
-  const icon = (name) => `<svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[name]}</svg>`;
+  const pad = (n) => String(n).padStart(2, "0");
+  const fmt = (n) => n.toLocaleString("en-US");
+  const photo = (src, alt = "") =>
+    `<img src="${src}" alt="${alt}" loading="lazy" onerror="this.classList.add('img-failed')">`;
 
   // Saturday-first week (index 0 = Saturday)
   function todayIndex() { return (new Date().getDay() + 1) % 7; }
 
-  /* ---------- Images: graceful fallback if a photo fails to load ---------- */
-  function photo(src, alt, cls = "") {
-    return `<img class="${cls}" src="${src}" alt="${alt}" loading="lazy" onerror="this.classList.add('img-failed')">`;
+  /* ---------- Renderers ---------- */
+  function renderMarquee() {
+    const words = t("marquee").split(" — ");
+    const once = words.map((w) => `<span>${w}</span>`).join("");
+    $("#marquee").innerHTML = once + once + once + once;
   }
 
-  /* ---------- Renderers ---------- */
-  function renderFeatures() {
-    $("#featuresGrid").innerHTML = FEATURES.map((f) => `
-      <article class="feature reveal">
-        <div class="feature__icon">${icon(f.icon)}</div>
-        <h3>${L(f.title)}</h3>
-        <p>${L(f.text)}</p>
-      </article>`).join("");
+  function renderManifesto() {
+    const el = $("#manifesto");
+    el.innerHTML = t("about.text").split(" ").map((w) => `<span class="w">${w}</span>`).join(" ");
+    updateManifesto();
   }
 
   function renderPrograms() {
-    $("#programsGrid").innerHTML = PROGRAMS.map((p) => `
-      <article class="program reveal">
-        <div class="program__media">${photo(p.image, L(p.title))}</div>
-        <div class="program__body">
-          <h3>${L(p.title)}</h3>
-          <p>${L(p.text)}</p>
-          <div class="program__meta">
-            <span>${icon("pulse")} ${L(p.level)}</span>
-            <span>${icon("clock")} ${p.sessions} ${t("programs.perWeek")}</span>
-          </div>
-        </div>
-      </article>`).join("");
+    $("#programsList").innerHTML = PROGRAMS.map((p, i) => `
+      <li class="prog" data-img="${p.image}">
+        <span class="prog__num">${pad(i + 1)}</span>
+        <h3 class="prog__title">${L(p.title)}</h3>
+        <p class="prog__desc">${L(p.text)}</p>
+        <div class="prog__meta"><b>${L(p.level)}</b>${p.sessions} ${t("programs.perWeek")}</div>
+        <div class="prog__thumb">${photo(p.image)}</div>
+      </li>`).join("");
   }
 
-  function renderTabs() {
+  function renderDays() {
     $("#dayTabs").innerHTML = DAYS.map((d, i) => `
-      <button type="button" role="tab" class="tab ${i === state.day ? "is-active" : ""}"
+      <button type="button" role="tab" class="day ${i === state.day ? "is-active" : ""}"
         aria-selected="${i === state.day}" data-day="${i}">${L(d)}</button>`).join("");
   }
 
   function renderSchedule() {
-    const list = SCHEDULE[state.day];
-    $("#scheduleList").innerHTML = list.map((c, i) => {
+    $("#scheduleList").innerHTML = SCHEDULE[state.day].map((c, i) => {
       const id = `${state.day}-${i}`;
       const booked = state.booked.has(id);
-      const spots = c.spots - (booked ? 1 : 0);
       const full = c.spots === 0;
-      const coach = TRAINERS[c.coach];
+      const spots = c.spots - (booked ? 1 : 0);
       return `
-      <div class="class-row ${full ? "is-full" : ""}">
-        <div class="class-row__time"><strong dir="ltr">${c.time}</strong><span>${c.dur} ${state.lang === "ar" ? "دقيقة" : "min"}</span></div>
-        <div class="class-row__info">
-          <h4>${L(c.name)}</h4>
-          <span>${L(coach.name)}</span>
-        </div>
-        <div class="class-row__spots">${full ? t("schedule.full") : `<b>${spots}</b> ${t("schedule.spots")}`}</div>
-        <button type="button" class="btn btn--sm ${booked ? "btn--done" : "btn--outline"}"
-          data-book="${id}" ${full || booked ? "disabled" : ""}>
+      <div class="sched ${full ? "is-full" : ""}" style="animation-delay:${i * 70}ms">
+        <div class="sched__time" dir="ltr">${c.time}<small>${c.dur} ${t("schedule.min")}</small></div>
+        <div class="sched__name">${L(c.name)}</div>
+        <div class="sched__coach">${L(TRAINERS[c.coach].name)}</div>
+        <div class="sched__spots">${full ? t("schedule.full") : `<b>${spots}</b> ${t("schedule.spots")}`}</div>
+        <button type="button" class="book-btn ${booked ? "is-booked" : ""}" data-book="${id}" ${full || booked ? "disabled" : ""}>
           ${booked ? t("schedule.booked") : full ? t("schedule.full") : t("schedule.book")}
         </button>
       </div>`;
@@ -84,48 +71,52 @@
   }
 
   function renderTrainers() {
-    $("#trainersGrid").innerHTML = TRAINERS.map((tr) => `
-      <article class="trainer reveal">
-        <div class="trainer__media">
-          ${photo(tr.image, L(tr.name))}
-          <span class="trainer__initials">${L(tr.name).split(" ").map((w) => w[0]).join("")}</span>
+    $("#trainersGrid").innerHTML = TRAINERS.map((m) => `
+      <article class="member fade">
+        <div class="member__media reveal-media">
+          <span class="member__initials">${L(m.name).split(" ").map((w) => w[0]).join("")}</span>
+          ${photo(m.image, L(m.name))}
         </div>
-        <div class="trainer__body">
-          <h3>${L(tr.name)}</h3>
-          <p>${L(tr.role)}</p>
-          <span class="trainer__exp">${tr.years}+ ${t("trainers.exp")}</span>
+        <div class="member__body">
+          <div><h3>${L(m.name)}</h3><p>${L(m.role)}</p></div>
+          <span class="member__exp">${m.years}+ ${t("trainers.exp")}</span>
         </div>
       </article>`).join("");
   }
 
+  function planPrice(p) { return state.yearly ? Math.round(p.monthly * 0.8) : p.monthly; }
+
   function renderPricing() {
-    $("#pricingGrid").innerHTML = PLANS.map((p) => {
-      const price = state.yearly ? Math.round(p.monthly * 0.8) : p.monthly;
-      return `
-      <article class="plan ${p.popular ? "plan--popular" : ""} reveal">
-        ${p.popular ? `<span class="plan__tag">${t("pricing.popular")}</span>` : ""}
-        <h3>${L(p.name)}</h3>
+    $("#pricingGrid").innerHTML = PLANS.map((p) => `
+      <article class="plan ${p.popular ? "plan--popular" : ""}">
+        <div class="plan__top">
+          <h3>${L(p.name)}</h3>
+          ${p.popular ? `<span class="plan__tag">${t("pricing.popular")}</span>` : ""}
+        </div>
         <div class="plan__price">
-          <strong>${price.toLocaleString("en-US")}</strong>
+          <strong data-price="${p.id}">${fmt(planPrice(p))}</strong>
           <span>${t("pricing.currency")} ${t("pricing.perMonth")}</span>
         </div>
-        <small class="plan__note">${state.yearly ? `${(price * 12).toLocaleString("en-US")} ${t("pricing.currency")} — ${t("pricing.billedYearly")}` : "&nbsp;"}</small>
-        <ul>${L(p.features).map((f) => `<li>${icon("check")}<span>${f}</span></li>`).join("")}</ul>
-        <a href="#contact" class="btn ${p.popular ? "btn--primary" : "btn--outline"} btn--block" data-plan="${p.id}">${t("pricing.choose")}</a>
-      </article>`;
-    }).join("");
+        <div class="plan__note" data-note="${p.id}">${planNote(p)}</div>
+        <ul>${L(p.features).map((f) => `<li>${f}</li>`).join("")}</ul>
+        <a href="#contact" class="btn ${p.popular ? "btn--paper" : "btn--ink"} btn--block" data-plan="${p.id}">
+          <span>${t("pricing.choose")}</span><i class="btn__arrow"></i>
+        </a>
+      </article>`).join("");
   }
 
-  function renderTestimonials() {
-    $("#sliderTrack").innerHTML = TESTIMONIALS.map((r) => `
-      <figure class="review">
-        <div class="review__stars">${icon("star").repeat(5)}</div>
-        <blockquote>“${L(r.text)}”</blockquote>
-        <figcaption><strong>${L(r.name)}</strong><span>${L(r.result)}</span></figcaption>
-      </figure>`).join("");
-    $("#sliderDots").innerHTML = TESTIMONIALS.map((_, i) =>
-      `<button type="button" aria-label="${i + 1}" data-slide="${i}"></button>`).join("");
-    goToSlide(state.slide);
+  function planNote(p) {
+    return state.yearly ? `${fmt(planPrice(p) * 12)} ${t("pricing.currency")} — ${t("pricing.billedYearly")}` : "";
+  }
+
+  function renderQuote() {
+    const q = TESTIMONIALS[state.quote];
+    $("#quote").innerHTML = `
+      <figure style="margin:0">
+        <blockquote class="q-in">“${L(q.text)}”</blockquote>
+        <figcaption class="q-in"><strong>${L(q.name)}</strong><span>${L(q.result)}</span></figcaption>
+      </figure>`;
+    $("#quoteCount").textContent = `${pad(state.quote + 1)} / ${pad(TESTIMONIALS.length)}`;
   }
 
   /* ---------- Language ---------- */
@@ -134,20 +125,22 @@
     html.lang = state.lang;
     html.dir = state.lang === "ar" ? "rtl" : "ltr";
     document.title = t("meta.title");
-    $("#langBtn").textContent = state.lang === "ar" ? "EN" : "ع";
+    $("#langBtn").textContent = state.lang === "ar" ? "EN" : "عربي";
 
     $$("[data-i18n]").forEach((el) => { el.textContent = t(el.dataset.i18n); });
     $$("[data-i18n-placeholder]").forEach((el) => { el.placeholder = t(el.dataset.i18nPlaceholder); });
+    $("#badgeText").textContent = t("hero.badge");
 
-    renderFeatures();
+    renderMarquee();
+    renderManifesto();
     renderPrograms();
-    renderTabs();
+    renderDays();
     renderSchedule();
     renderTrainers();
     renderPricing();
-    renderTestimonials();
-    if (lastBmi) showBmi(lastBmi);
-    observeReveals();
+    renderQuote();
+    updateBmi();
+    observeMotion();
   }
 
   $("#langBtn").addEventListener("click", () => {
@@ -156,164 +149,232 @@
     applyLang();
   });
 
+  /* ---------- Reveal on scroll ---------- */
+  // Clipped elements (.reveal-media) report no visible area, so we watch
+  // their parent and reveal them through this map.
+  const proxies = new Map();
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (!e.isIntersecting) return;
+      if (e.target.matches(".split-lines, .fade")) e.target.classList.add("is-in");
+      (proxies.get(e.target) || []).forEach((el) => el.classList.add("is-in"));
+      proxies.delete(e.target);
+      io.unobserve(e.target);
+    });
+  }, { threshold: 0.15, rootMargin: "0px 0px -6% 0px" });
+
+  function observeMotion() {
+    $$(".split-lines:not(.is-in), .fade:not(.is-in)").forEach((el) => io.observe(el));
+    $$(".reveal-media:not(.is-in)").forEach((el) => {
+      const parent = el.parentElement;
+      if (!proxies.has(parent)) proxies.set(parent, []);
+      proxies.get(parent).push(el);
+      io.observe(parent);
+    });
+  }
+
   /* ---------- Navbar ---------- */
   const nav = $("#nav");
   const burger = $("#burger");
-  const onScroll = () => nav.classList.toggle("is-scrolled", window.scrollY > 20);
-  window.addEventListener("scroll", onScroll, { passive: true });
-  onScroll();
+  let lastY = window.scrollY;
 
   burger.addEventListener("click", () => {
     const open = nav.classList.toggle("is-open");
     burger.setAttribute("aria-expanded", open);
+    document.body.style.overflow = open ? "hidden" : "";
   });
   $$("#navLinks a").forEach((a) => a.addEventListener("click", () => {
     nav.classList.remove("is-open");
     burger.setAttribute("aria-expanded", "false");
+    document.body.style.overflow = "";
   }));
 
-  // Highlight the link of the section in view
-  const sections = $$("main section[id]");
   const linkObserver = new IntersectionObserver((entries) => {
     entries.forEach((e) => {
       if (!e.isIntersecting) return;
-      $$("#navLinks a").forEach((a) =>
-        a.classList.toggle("is-active", a.getAttribute("href") === `#${e.target.id}`));
+      $$("#navLinks a").forEach((a) => a.classList.toggle("is-active", a.getAttribute("href") === `#${e.target.id}`));
     });
   }, { rootMargin: "-45% 0px -50% 0px" });
-  sections.forEach((s) => linkObserver.observe(s));
+  $$("main section[id]").forEach((s) => linkObserver.observe(s));
 
-  /* ---------- Reveal on scroll ---------- */
-  const revealObserver = "IntersectionObserver" in window
-    ? new IntersectionObserver((entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) { e.target.classList.add("is-visible"); revealObserver.unobserve(e.target); }
-        });
-      }, { threshold: 0.12 })
-    : null;
+  /* ---------- Scroll-driven effects ---------- */
+  const heroImg = $("#heroParallax img");
+  const heroMedia = $(".hero__media");
+  const heroReveal = $("#heroParallax");
 
-  function observeReveals() {
-    $$(".reveal:not(.is-visible)").forEach((el) => {
-      revealObserver ? revealObserver.observe(el) : el.classList.add("is-visible");
-    });
+  function updateManifesto() {
+    const el = $("#manifesto");
+    const words = el.querySelectorAll(".w");
+    if (reducedMotion) { words.forEach((w) => w.classList.add("on")); return; }
+    const r = el.getBoundingClientRect();
+    const vh = window.innerHeight;
+    const start = vh * 0.85;
+    const end = vh * 0.35;
+    const progress = Math.min(1, Math.max(0, (start - r.top) / (start - end + r.height * 0.6)));
+    const lit = Math.round(progress * words.length);
+    words.forEach((w, i) => w.classList.toggle("on", i < lit));
   }
 
+  let ticking = false;
+  function onScroll() {
+    const y = window.scrollY;
+    nav.classList.toggle("is-scrolled", y > 10);
+    if (!nav.classList.contains("is-open")) nav.classList.toggle("is-hidden", y > lastY && y > 400);
+    lastY = y;
+
+    updateManifesto();
+
+    if (!reducedMotion && heroReveal.classList.contains("is-settled")) {
+      const r = heroMedia.getBoundingClientRect();
+      if (r.bottom > 0) heroImg.style.transform = `translateY(${Math.max(-13, -((window.innerHeight - r.top) / window.innerHeight) * 9)}%)`;
+    }
+    ticking = false;
+  }
+  window.addEventListener("scroll", () => {
+    if (!ticking) { requestAnimationFrame(onScroll); ticking = true; }
+  }, { passive: true });
+
+  // Once the hero image has revealed, hand its transform over to the parallax
+  heroMedia.addEventListener("transitionend", (e) => {
+    if (e.propertyName !== "clip-path") return;
+    setTimeout(() => {
+      heroImg.style.transition = "transform .25s linear";
+      heroReveal.classList.add("is-settled");
+      onScroll();
+    }, 500);
+  });
+
   /* ---------- Counters ---------- */
-  const counterObserver = new IntersectionObserver((entries) => {
+  function tween(el, from, to, dur, fmtFn = fmt, suffix = "") {
+    if (reducedMotion) { el.textContent = fmtFn(to) + suffix; return; }
+    const start = performance.now();
+    const step = (now) => {
+      const p = Math.min((now - start) / dur, 1);
+      const eased = 1 - Math.pow(1 - p, 4);
+      el.textContent = fmtFn(Math.round(from + (to - from) * eased)) + suffix;
+      if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+  const counterIO = new IntersectionObserver((entries) => {
     entries.forEach((e) => {
       if (!e.isIntersecting) return;
-      const el = e.target;
-      const end = +el.dataset.count;
-      const suffix = el.dataset.suffix || "";
-      const start = performance.now();
-      const step = (now) => {
-        const p = Math.min((now - start) / 1400, 1);
-        el.textContent = Math.round(end * (1 - Math.pow(1 - p, 3))).toLocaleString("en-US") + suffix;
-        if (p < 1) requestAnimationFrame(step);
-      };
-      requestAnimationFrame(step);
-      counterObserver.unobserve(el);
+      tween(e.target, 0, +e.target.dataset.count, 1800, fmt, e.target.dataset.suffix || "");
+      counterIO.unobserve(e.target);
     });
-  }, { threshold: 0.5 });
-  $$("[data-count]").forEach((el) => counterObserver.observe(el));
+  }, { threshold: 0.6 });
+  $$("[data-count]").forEach((el) => counterIO.observe(el));
+
+  /* ---------- Program hover preview (desktop) ---------- */
+  const preview = $("#progPreview");
+  const previewImg = preview.querySelector("img");
+  const mouse = { x: 0, y: 0 }, pos = { x: 0, y: 0 };
+  let previewRaf = null;
+
+  function followLoop() {
+    pos.x += (mouse.x - pos.x) * 0.14;
+    pos.y += (mouse.y - pos.y) * 0.14;
+    preview.style.left = `${pos.x}px`;
+    preview.style.top = `${pos.y}px`;
+    previewRaf = requestAnimationFrame(followLoop);
+  }
+
+  if (finePointer) {
+    const list = $("#programsList");
+    list.addEventListener("mousemove", (e) => {
+      mouse.x = e.clientX; mouse.y = e.clientY;
+      const row = e.target.closest(".prog");
+      if (row && previewImg.getAttribute("src") !== row.dataset.img) previewImg.src = row.dataset.img;
+    });
+    list.addEventListener("mouseenter", (e) => {
+      mouse.x = pos.x = e.clientX; mouse.y = pos.y = e.clientY;
+      preview.classList.add("is-on");
+      if (!previewRaf) followLoop();
+    });
+    list.addEventListener("mouseleave", () => {
+      preview.classList.remove("is-on");
+      cancelAnimationFrame(previewRaf); previewRaf = null;
+    });
+  }
 
   /* ---------- Schedule ---------- */
   $("#dayTabs").addEventListener("click", (e) => {
     const btn = e.target.closest("[data-day]");
     if (!btn) return;
     state.day = +btn.dataset.day;
-    renderTabs();
+    renderDays();
     renderSchedule();
   });
-
   $("#scheduleList").addEventListener("click", (e) => {
     const btn = e.target.closest("[data-book]");
     if (!btn || btn.disabled) return;
     state.booked.add(btn.dataset.book);
     renderSchedule();
+    $$(".sched").forEach((r) => { r.style.animation = "none"; });
     toast(t("schedule.bookedToast"));
   });
 
-  /* ---------- BMI ---------- */
-  let lastBmi = null;
-  $("#bmiForm").addEventListener("submit", (e) => {
-    e.preventDefault();
-    const h = parseFloat($("#height").value);
-    const w = parseFloat($("#weight").value);
-    if (!(h >= 100 && h <= 250 && w >= 30 && w <= 300)) {
-      toast(t("bmi.error"), true);
-      return;
-    }
-    lastBmi = w / Math.pow(h / 100, 2);
-    showBmi(lastBmi);
-  });
-
-  function showBmi(bmi) {
+  /* ---------- BMI (live sliders) ---------- */
+  const hIn = $("#height"), wIn = $("#weight");
+  function paintRange(input) {
+    const p = ((input.value - input.min) / (input.max - input.min)) * 100;
+    input.style.setProperty("--p", `${p}%`);
+  }
+  function updateBmi() {
+    const h = +hIn.value, w = +wIn.value;
+    $("#heightOut").innerHTML = `${h}<small>${t("bmi.cm")}</small>`;
+    $("#weightOut").innerHTML = `${w}<small>${t("bmi.kg")}</small>`;
+    paintRange(hIn); paintRange(wIn);
+    const bmi = w / Math.pow(h / 100, 2);
     const cat = bmi < 18.5 ? "under" : bmi < 25 ? "normal" : bmi < 30 ? "over" : "obese";
-    const box = $("#bmiResult");
-    box.hidden = false;
+    const box = $(".bmi__result");
     box.dataset.cat = cat;
     $("#bmiValue").textContent = bmi.toFixed(1);
     $("#bmiLabel").textContent = t(`bmi.${cat}`);
-    // Map BMI 15–40 onto 0–100% of the bar
-    const pct = Math.max(0, Math.min(100, ((bmi - 15) / 25) * 100));
-    $("#bmiPointer").style.insetInlineStart = `${pct}%`;
+    // Scale runs 15 → 40
+    $("#bmiPointer").style.left = `${Math.max(0, Math.min(100, ((bmi - 15) / 25) * 100))}%`;
   }
+  hIn.addEventListener("input", updateBmi);
+  wIn.addEventListener("input", updateBmi);
 
   /* ---------- Pricing ---------- */
-  const billing = $("#billingSwitch");
-  billing.addEventListener("click", () => {
-    state.yearly = !state.yearly;
-    billing.setAttribute("aria-checked", state.yearly);
-    billing.classList.toggle("is-on", state.yearly);
-    renderPricing();
-    $$("#pricingGrid .reveal").forEach((el) => el.classList.add("is-visible"));
-  });
+  $$("[data-billing]").forEach((btn) => btn.addEventListener("click", () => {
+    const yearly = btn.dataset.billing === "yearly";
+    if (yearly === state.yearly) return;
+    const before = PLANS.map(planPrice);
+    state.yearly = yearly;
+    $$("[data-billing]").forEach((b) => b.classList.toggle("is-active", b === btn));
+    PLANS.forEach((p, i) => {
+      tween($(`[data-price="${p.id}"]`), before[i], planPrice(p), 700);
+      $(`[data-note="${p.id}"]`).textContent = planNote(p);
+    });
+  }));
 
   $("#pricingGrid").addEventListener("click", (e) => {
     const btn = e.target.closest("[data-plan]");
     if (!btn) return;
     const plan = PLANS.find((p) => p.id === btn.dataset.plan);
     toast(t("pricing.chosenToast", { plan: L(plan.name) }));
-    setTimeout(() => $("#name").focus({ preventScroll: true }), 700);
+    setTimeout(() => $("#name").focus({ preventScroll: true }), 900);
   });
 
-  /* ---------- Testimonials slider ---------- */
-  function goToSlide(i) {
-    state.slide = (i + TESTIMONIALS.length) % TESTIMONIALS.length;
-    const dir = state.lang === "ar" ? 1 : -1;
-    $("#sliderTrack").style.transform = `translateX(${dir * state.slide * 100}%)`;
-    $$("#sliderDots button").forEach((d, n) => d.classList.toggle("is-active", n === state.slide));
+  /* ---------- Testimonials ---------- */
+  let quoteTimer;
+  function goQuote(i) {
+    state.quote = (i + TESTIMONIALS.length) % TESTIMONIALS.length;
+    renderQuote();
+    clearInterval(quoteTimer);
+    quoteTimer = setInterval(() => goQuote(state.quote + 1), 8000);
   }
-  $("#sliderDots").addEventListener("click", (e) => {
-    const d = e.target.closest("[data-slide]");
-    if (d) { goToSlide(+d.dataset.slide); restartAuto(); }
-  });
-  let auto;
-  const restartAuto = () => { clearInterval(auto); auto = setInterval(() => goToSlide(state.slide + 1), 5500); };
-  restartAuto();
-
-  // Swipe support
-  let startX = null;
-  const track = $("#sliderTrack");
-  track.addEventListener("touchstart", (e) => { startX = e.touches[0].clientX; }, { passive: true });
-  track.addEventListener("touchend", (e) => {
-    if (startX === null) return;
-    const dx = e.changedTouches[0].clientX - startX;
-    if (Math.abs(dx) > 40) {
-      const forward = state.lang === "ar" ? dx > 0 : dx < 0;
-      goToSlide(state.slide + (forward ? 1 : -1));
-      restartAuto();
-    }
-    startX = null;
-  });
+  $("#nextQuote").addEventListener("click", () => goQuote(state.quote + 1));
+  $("#prevQuote").addEventListener("click", () => goQuote(state.quote - 1));
+  quoteTimer = setInterval(() => goQuote(state.quote + 1), 8000);
 
   /* ---------- Contact form ---------- */
   const form = $("#contactForm");
   form.addEventListener("submit", (e) => {
     e.preventDefault();
-    const name = $("#name");
-    const phone = $("#phone");
+    const name = $("#name"), phone = $("#phone");
     const nameOk = name.value.trim().length >= 2;
     const phoneOk = /^\+?[\d\s-]{8,15}$/.test(phone.value.trim());
     name.closest(".field").classList.toggle("has-error", !nameOk);
@@ -321,13 +382,11 @@
     if (!nameOk || !phoneOk) return;
 
     const btn = form.querySelector("[type=submit]");
-    btn.disabled = true;
     btn.classList.add("is-loading");
     // Demo only: simulate sending to a server
     setTimeout(() => {
       toast(t("form.success", { name: name.value.trim().split(" ")[0] }));
       form.reset();
-      btn.disabled = false;
       btn.classList.remove("is-loading");
     }, 900);
   });
@@ -336,16 +395,16 @@
 
   /* ---------- Toast ---------- */
   let toastTimer;
-  function toast(msg, isError = false) {
+  function toast(msg) {
     const el = $("#toast");
     el.textContent = msg;
-    el.classList.toggle("is-error", isError);
     el.classList.add("is-show");
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => el.classList.remove("is-show"), 3500);
+    toastTimer = setTimeout(() => el.classList.remove("is-show"), 3600);
   }
 
   /* ---------- Init ---------- */
   $("#year").textContent = new Date().getFullYear();
   applyLang();
+  onScroll();
 })();
